@@ -6,10 +6,12 @@
         {
             Nome = nome;
             Email = email;
+            Emprestimos = new List<Emprestimo>() { };
         }
 
         public string Nome { get; private set; }
         public string Email { get; private set; }
+        public List<Emprestimo> Emprestimos { get; private set; }
 
         public void AtualizarEmail(string email)
         {
@@ -21,6 +23,5 @@
                 throw new ArgumentException("O email precisa ser diferente do cadastrado.", nameof(email));
             Email = email;
         }
-
     }
 }

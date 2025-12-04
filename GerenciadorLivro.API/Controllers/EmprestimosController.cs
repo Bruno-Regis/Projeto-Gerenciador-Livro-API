@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GerenciadorLivro.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GerenciadorLivro.API.Controllers
 {
