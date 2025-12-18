@@ -1,5 +1,8 @@
-﻿using GerenciadorLivro.API.Models;
+﻿using GerenciadorLivro.API.Entities;
+using GerenciadorLivro.API.Models;
+using GerenciadorLivro.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciadorLivro.API.Controllers
 {
@@ -7,25 +10,45 @@ namespace GerenciadorLivro.API.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
+        private readonly LivrosDbContext _context;
+        public UsuariosController(LivrosDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET api/usuarios?search=term
+        [HttpGet]
+        public IActionResult Get(string search = "")
+        {
+            var usuarios = _context.Usuarios.ToList();
+
+            var model = usuarios.Select(u => UsuarioItemViewModel.FromEntity(u)).ToList();
+            return Ok(model);
+        }
+
+
         // GET api/usuarios/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok();
+            var usuario = _context.Usuarios
+                .Include(u => u.Emprestimos)
+                    .ThenInclude(e => e.Livro)
+                .FirstOrDefault(u => u.Id == id);
+
+            var model = UsuarioViewModel.FromEntity(usuario);
+
+            return Ok(model);
         }
 
         // POST api/usuarios
         [HttpPost]  
         public IActionResult Post(CreateUsuarioInputModel model)
         {
-            return CreatedAtAction(nameof(GetById), new { id = 1234 }, model);
-        }
-
-        // PUT api/usuarios/1234
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, UpdateUsuarioInputModel model)
-        {
-            return NoContent();
+            var usuario = model.ToEntity();
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, model);
         }
 
     }

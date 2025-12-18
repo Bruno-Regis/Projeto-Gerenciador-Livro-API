@@ -6,7 +6,8 @@ namespace GerenciadorLivro.API.Persistence
     public class LivrosDbContext : DbContext
     {
 
-        public LivrosDbContext(DbContextOptions<LivrosDbContext> options) : base(options)
+        public LivrosDbContext(DbContextOptions<LivrosDbContext> options) 
+            : base(options)
         {
 
         }
