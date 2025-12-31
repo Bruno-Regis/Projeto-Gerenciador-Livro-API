@@ -10,9 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<LivrosDbContext>(o => o.UseInMemoryDatabase("GerenciadorLivrosDb"));
-//var connectionString = builder.Configuration.GetConnectionString("GerenciadorLivrosCs");
-//builder.Services.AddDbContext<LivrosDbContext>(o => o.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<LivrosDbContext>(o => o.UseInMemoryDatabase("GerenciadorLivrosDb"));
+var connectionString = builder.Configuration.GetConnectionString("GerenciadorLivrosCs");
+builder.Services.AddDbContext<LivrosDbContext>(o => o.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
