@@ -1,7 +1,7 @@
-﻿using GerenciadorLivro.API.Entities;
+﻿using GerenciadorLivro.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace GerenciadorLivro.API.Persistence
+namespace GerenciadorLivro.Infrastructure.Persistence
 {
     public class LivrosDbContext : DbContext
     {

@@ -1,6 +1,6 @@
-﻿using GerenciadorLivro.API.Enums;
+﻿using GerenciadorLivro.Core.Enums;
 
-namespace GerenciadorLivro.API.Entities
+namespace GerenciadorLivro.Core.Entities
 {
     public class Livro : BaseEntity
     {

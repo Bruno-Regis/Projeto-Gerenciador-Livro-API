@@ -1,4 +1,4 @@
-﻿namespace GerenciadorLivro.API.Entities
+﻿namespace GerenciadorLivro.Core.Entities
 {
     public class Emprestimo : BaseEntity
     {

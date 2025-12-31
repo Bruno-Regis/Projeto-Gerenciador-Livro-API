@@ -1,7 +1,7 @@
-﻿using GerenciadorLivro.API.Entities;
+﻿using GerenciadorLivro.Core.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace GerenciadorLivro.API.Models
+namespace GerenciadorLivro.Application.Models
 {
     public class CreateUsuarioInputModel
     {

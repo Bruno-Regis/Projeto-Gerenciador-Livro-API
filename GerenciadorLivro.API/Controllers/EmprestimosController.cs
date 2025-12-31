@@ -1,6 +1,6 @@
-﻿using GerenciadorLivro.API.Entities;
-using GerenciadorLivro.API.Models;
-using GerenciadorLivro.API.Persistence;
+﻿using GerenciadorLivro.Core.Entities;
+using GerenciadorLivro.Application.Models;
+using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

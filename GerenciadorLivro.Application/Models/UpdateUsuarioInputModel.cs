@@ -1,4 +1,4 @@
-﻿namespace GerenciadorLivro.API.Models
+﻿namespace GerenciadorLivro.Application.Models
 {
     public class UpdateUsuarioInputModel
     {

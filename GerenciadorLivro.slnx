@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="GerenciadorLivro.API/GerenciadorLivro.API.csproj" />
+  <Project Path="GerenciadorLivro.Application/GerenciadorLivro.Application.csproj" Id="d208faac-42c9-45d0-b007-a72825a5f7f6" />
+  <Project Path="GerenciadorLivro.Core/GerenciadorLivro.Core.csproj" Id="e581df63-71b2-4d02-9215-43e952a98a1f" />
+  <Project Path="GerenciadorLivro.Infrastructure/GerenciadorLivro.Infrastructure.csproj" Id="83752ce4-b07d-4330-b799-ff2753d7846d" />
 </Solution>

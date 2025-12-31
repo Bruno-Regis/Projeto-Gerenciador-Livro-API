@@ -1,6 +1,6 @@
-﻿using GerenciadorLivro.API.Entities;
+﻿using GerenciadorLivro.Core.Entities;
 
-namespace GerenciadorLivro.API.Models
+namespace GerenciadorLivro.Application.Models
 {
     public class EmprestimoViewModel
     {

@@ -1,4 +1,4 @@
-﻿namespace GerenciadorLivro.API.Enums
+﻿namespace GerenciadorLivro.Core.Enums
 {
     public enum StatusEmprestimoEnum
     {

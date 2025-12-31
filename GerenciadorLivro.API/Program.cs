@@ -1,4 +1,4 @@
-using GerenciadorLivro.API.Persistence;
+using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
