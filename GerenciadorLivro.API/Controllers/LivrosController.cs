@@ -3,6 +3,7 @@ using GerenciadorLivro.Application.Models;
 using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GerenciadorLivro.Application.Services;
 
 namespace GerenciadorLivro.API.Controllers
 {
@@ -12,56 +13,52 @@ namespace GerenciadorLivro.API.Controllers
     public class LivrosController : ControllerBase
     {
         private readonly LivrosDbContext _context;
-        public LivrosController(LivrosDbContext context)
+        private readonly ILivroService _service;
+        public LivrosController(LivrosDbContext context, ILivroService service)
         {
             _context = context;
+            _service = service;
         }
 
         // GET api/livros?search=term
         [HttpGet]
         public IActionResult Get(string search ="")
         {
-            var livros = _context.Livros.ToList();
-
-            var model = livros.Select(l => LivroItemViewModel.FromEntity(l)).ToList(); 
-            return Ok(model);
+            var result = _service.GetAll(search);
+            return Ok(result);
         }
 
         // GET api/livros/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var livro = _context.Livros
-                .Include(l => l.Emprestimos)
-                .SingleOrDefault(l => l.Id == id);
+            var result = _service.GetById(id);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
 
-            var model = LivroViewModel.FromEntity(livro);
-
-            return Ok(model);
+            return Ok(result);
         }
 
         // POST api/livros
         [HttpPost]
         public IActionResult Post(CreateLivroInputModel model)
         {
-            var livro = model.ToEntity();
-            _context.Livros.Add(livro);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = livro.Id }, model);
+            var result = _service.Insert(model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
         // DELETE api/livros/1234
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var livro = _context.Livros.SingleOrDefault(l => l.Id == id);
-            if (livro == null)
+            var result = _service.Delete(id);
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            _context.Livros.Remove(livro);
-            _context.SaveChanges();
             return NoContent();
         }
     }

@@ -1,6 +1,8 @@
 using GerenciadorLivro.Infrastructure.Persistence;
+using GerenciadorLivro.Application;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ builder.Services.AddOpenApi();
 //builder.Services.AddDbContext<LivrosDbContext>(o => o.UseInMemoryDatabase("GerenciadorLivrosDb"));
 var connectionString = builder.Configuration.GetConnectionString("GerenciadorLivrosCs");
 builder.Services.AddDbContext<LivrosDbContext>(o => o.UseSqlServer(connectionString));
+
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
