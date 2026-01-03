@@ -3,6 +3,7 @@ using GerenciadorLivro.Application.Models;
 using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GerenciadorLivro.Application.Services;
 
 namespace GerenciadorLivro.API.Controllers
 {
@@ -10,20 +11,18 @@ namespace GerenciadorLivro.API.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly LivrosDbContext _context;
-        public UsuariosController(LivrosDbContext context)
+        private readonly IUsuarioService _service;
+        public UsuariosController(IUsuarioService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET api/usuarios?search=term
         [HttpGet]
         public IActionResult Get(string search = "")
         {
-            var usuarios = _context.Usuarios.ToList();
-
-            var model = usuarios.Select(u => UsuarioItemViewModel.FromEntity(u)).ToList();
-            return Ok(model);
+            var result = _service.GetAll(search);
+            return Ok(result);
         }
 
 
@@ -31,24 +30,21 @@ namespace GerenciadorLivro.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var usuario = _context.Usuarios
-                .Include(u => u.Emprestimos)
-                    .ThenInclude(e => e.Livro)
-                .FirstOrDefault(u => u.Id == id);
+            var result = _service.GetById(id);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
 
-            var model = UsuarioViewModel.FromEntity(usuario);
-
-            return Ok(model);
+            return Ok(result);
         }
 
         // POST api/usuarios
-        [HttpPost]  
+        [HttpPost]   
         public IActionResult Post(CreateUsuarioInputModel model)
         {
-            var usuario = model.ToEntity();
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, model);
+            var result = _service.Insert(model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
     }

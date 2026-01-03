@@ -3,6 +3,7 @@ using GerenciadorLivro.Application.Models;
 using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GerenciadorLivro.Application.Services;
 
 namespace GerenciadorLivro.API.Controllers
 {
@@ -11,9 +12,11 @@ namespace GerenciadorLivro.API.Controllers
     public class EmprestimosController : ControllerBase
     {
         private readonly LivrosDbContext _context;
-        public EmprestimosController(LivrosDbContext context)
+        private readonly IEmprestimoService _service;
+        public EmprestimosController(LivrosDbContext context, IEmprestimoService service)
         {
             _context = context;
+            _service = service;
         }
 
 
@@ -21,24 +24,20 @@ namespace GerenciadorLivro.API.Controllers
         [HttpGet]
         public IActionResult Get(string search = "")
         {
-            var emprestimo = _context.Emprestimos.ToList();
-
-            var model = emprestimo.Select(e => EmprestimoItemViewModel.FromEntity(e)).ToList();
-            return Ok(model);
+            var result = _service.GetAll(search);
+            return Ok(result);
         }
 
         // GET api/emprestimos/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var emprestimo = _context.Emprestimos
-                .Include(e => e.Livro)
-                .Include(e => e.Usuario)
-                .SingleOrDefault(e => e.Id == id);
-
-            var model = EmprestimoViewModel.FromEntity(emprestimo);
-
-            return Ok(model);
+            var result = _service.GetById(id);
+            if(!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
         }
 
 
@@ -47,44 +46,21 @@ namespace GerenciadorLivro.API.Controllers
         public IActionResult Post(CreateEmprestimoInputModel model)
         {
             
-            var livro = _context.Livros.SingleOrDefault(l => l.Id == model.IdLivro);
-            if (livro == null)
-                return NotFound("Livro não encontrado.");
+            var result = _service.Insert(model);
 
-            var usuario = _context.Usuarios.Find(model.IdUsuario);
-            if (usuario == null)
-                return NotFound("Usuário não encontrado.");
-
-            livro.Emprestar();
-
-            var emprestimo = model.ToEntity();
-            _context.Emprestimos.Add(emprestimo);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetById), new { id = emprestimo.Id }, model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
         // POST api/emprestimos/{id}/devolucao
         [HttpPost("{id}/devolucao")]
         public IActionResult RegistrarDevolucao(int id)
         {
-            var emprestimo = _context.Emprestimos.SingleOrDefault(e => e.Id == id);
-
-            if (emprestimo == null)
+            var result = _service.Devolver(id);
+            
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-
-            var livro = _context.Livros.SingleOrDefault(l => l.Id == emprestimo.IdLivro);
-            if (livro == null)
-                return NotFound("Livro não encontrado.");
-
-            livro.Devolver();
-
-            emprestimo.RegistrarDevolucao();
-            _context.Emprestimos.Update(emprestimo);
-            _context.SaveChanges();
-
             return NoContent();
         }
 

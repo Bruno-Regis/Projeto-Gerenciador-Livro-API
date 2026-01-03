@@ -12,11 +12,9 @@ namespace GerenciadorLivro.API.Controllers
     [ApiController]
     public class LivrosController : ControllerBase
     {
-        private readonly LivrosDbContext _context;
         private readonly ILivroService _service;
-        public LivrosController(LivrosDbContext context, ILivroService service)
+        public LivrosController(ILivroService service)
         {
-            _context = context;
             _service = service;
         }
 
@@ -54,6 +52,7 @@ namespace GerenciadorLivro.API.Controllers
         public IActionResult Delete(int id)
         {
             var result = _service.Delete(id);
+            
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Message);

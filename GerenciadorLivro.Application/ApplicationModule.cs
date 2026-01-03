@@ -15,6 +15,8 @@ namespace GerenciadorLivro.Application
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ILivroService, LivroService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IEmprestimoService, EmprestimoService>();
             return services;
         }
     }
