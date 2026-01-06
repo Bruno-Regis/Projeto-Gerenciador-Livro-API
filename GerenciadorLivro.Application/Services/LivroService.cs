@@ -1,4 +1,5 @@
 ﻿using GerenciadorLivro.Application.Models;
+using GerenciadorLivro.Core.Repositories;
 using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,26 +8,24 @@ namespace GerenciadorLivro.Application.Services
     public class LivroService : ILivroService
     {
 
-        private readonly LivrosDbContext _context;
+        private readonly ILivroRepository _repository;
         
-        public LivroService(LivrosDbContext context)
+        public LivroService(ILivroRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public ResultViewModel<List<LivroItemViewModel>> GetAll(string search = "")
+        public async Task<ResultViewModel<List<LivroItemViewModel>>> GetAll(string search = "")
         {
-            var livros = _context.Livros.ToList();
+            var livros = await _repository.GetAll(search);
 
             var model = livros.Select(l => LivroItemViewModel.FromEntity(l)).ToList();
             return ResultViewModel<List<LivroItemViewModel>>.Success(model);
         }
-
-        public ResultViewModel<LivroViewModel> GetById(int id)
+    
+        public async Task<ResultViewModel<LivroViewModel>> GetById(int id)
         {
-            var livro = _context.Livros
-                .Include(l => l.Emprestimos)
-                .SingleOrDefault(l => l.Id == id);
+            var livro = await _repository.GetById(id);
 
             if (livro is null)
                 return ResultViewModel<LivroViewModel>.Error("Livro não encontrado");
@@ -36,23 +35,21 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<LivroViewModel>.Success(model);
         }
 
-        public ResultViewModel<int> Insert(CreateLivroInputModel model)
+        public async Task<ResultViewModel<int>> Insert(CreateLivroInputModel model)
         {
             var livro = model.ToEntity();
-            _context.Livros.Add(livro);
-            _context.SaveChanges();
+            await _repository.Add(livro);
 
             return ResultViewModel<int>.Success(livro.Id);
         }
 
-        public ResultViewModel Delete(int id)
+        public async Task<ResultViewModel> Delete(int id)
         {
-            var livro = _context.Livros.SingleOrDefault(l => l.Id == id);
+            var livro = await _repository.GetById(id);  
             if (livro is null)
                 return ResultViewModel.Error("Livro não encontrado");
-
-            _context.Livros.Remove(livro);
-            _context.SaveChanges();
+      
+            await _repository.Delete(livro);
 
             return ResultViewModel.Success();
         }

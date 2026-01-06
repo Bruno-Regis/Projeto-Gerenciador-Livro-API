@@ -20,7 +20,7 @@ namespace GerenciadorLivro.API.Controllers
 
         // GET api/livros?search=term
         [HttpGet]
-        public IActionResult Get(string search ="")
+        public async Task<IActionResult> Get(string search ="")
         {
             var result = _service.GetAll(search);
             return Ok(result);
@@ -28,9 +28,9 @@ namespace GerenciadorLivro.API.Controllers
 
         // GET api/livros/1234
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetById(id);
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Message);
@@ -41,17 +41,17 @@ namespace GerenciadorLivro.API.Controllers
 
         // POST api/livros
         [HttpPost]
-        public IActionResult Post(CreateLivroInputModel model)
+        public async Task<IActionResult> Post(CreateLivroInputModel model)
         {
-            var result = _service.Insert(model);
+            var result = await _service.Insert(model);
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
         // DELETE api/livros/1234
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _service.Delete(id);
+            var result = await _service.Delete(id);
             
             if (!result.IsSuccess)
             {

@@ -7,9 +7,9 @@ namespace GerenciadorLivro.Application.Services
 {
     public interface ILivroService
     {
-        ResultViewModel<List<LivroItemViewModel>> GetAll(string search = "");
-        ResultViewModel<LivroViewModel> GetById(int id);
-        ResultViewModel<int> Insert(CreateLivroInputModel model);
-        ResultViewModel Delete(int id);
+        Task<ResultViewModel<List<LivroItemViewModel>>> GetAll(string search = "");
+        Task<ResultViewModel<LivroViewModel>> GetById(int id);
+        Task<ResultViewModel<int>> Insert(CreateLivroInputModel model);
+        Task<ResultViewModel> Delete(int id);
     }
 }
