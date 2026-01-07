@@ -1,8 +1,6 @@
 ﻿using GerenciadorLivro.Core.Entities;
 using GerenciadorLivro.Application.Models;
-using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using GerenciadorLivro.Application.Services;
 
 namespace GerenciadorLivro.API.Controllers
@@ -11,18 +9,15 @@ namespace GerenciadorLivro.API.Controllers
     [ApiController]
     public class EmprestimosController : ControllerBase
     {
-        private readonly LivrosDbContext _context;
         private readonly IEmprestimoService _service;
-        public EmprestimosController(LivrosDbContext context, IEmprestimoService service)
+        public EmprestimosController(IEmprestimoService service)
         {
-            _context = context;
             _service = service;
         }
 
-
         // GET api/emprestimos?search=term
         [HttpGet]
-        public IActionResult Get(string search = "")
+        public async Task<IActionResult> Get(string search = "")
         {
             var result = _service.GetAll(search);
             return Ok(result);
@@ -30,7 +25,7 @@ namespace GerenciadorLivro.API.Controllers
 
         // GET api/emprestimos/1234
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var result = _service.GetById(id);
             if(!result.IsSuccess)
@@ -43,7 +38,7 @@ namespace GerenciadorLivro.API.Controllers
 
         [HttpPost]
         // POST api/emprestimos
-        public IActionResult Post(CreateEmprestimoInputModel model)
+        public async Task<IActionResult> Post(CreateEmprestimoInputModel model)
         {
             
             var result = _service.Insert(model);
@@ -53,7 +48,7 @@ namespace GerenciadorLivro.API.Controllers
 
         // POST api/emprestimos/{id}/devolucao
         [HttpPost("{id}/devolucao")]
-        public IActionResult RegistrarDevolucao(int id)
+        public async Task<IActionResult> RegistrarDevolucao(int id)
         {
             var result = _service.Devolver(id);
             

@@ -25,7 +25,7 @@ namespace GerenciadorLivro.Application.Services
     
         public async Task<ResultViewModel<LivroViewModel>> GetById(int id)
         {
-            var livro = await _repository.GetByIdAsync(id);
+            var livro = await _repository.GetDetailsByIdAsync(id);
 
             if (livro is null)
                 return ResultViewModel<LivroViewModel>.Error("Livro não encontrado");

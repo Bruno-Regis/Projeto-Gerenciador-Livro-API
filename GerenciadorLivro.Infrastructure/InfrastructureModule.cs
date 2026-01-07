@@ -31,6 +31,7 @@ namespace GerenciadorLivro.Infrastructure
         {
             // Register repository implementations here
             services.AddScoped<ILivroRepository, LivroRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             return services;
         }

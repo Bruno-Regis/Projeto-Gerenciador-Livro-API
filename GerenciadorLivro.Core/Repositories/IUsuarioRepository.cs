@@ -9,7 +9,6 @@ namespace GerenciadorLivro.Core.Repositories
     {
         Task<List<Usuario>> GetAllAsync();
         Task<Usuario?> GetDetailsByIdAsync(int id);
-        Task<Usuario?> GetByIdAsync(int id);
         Task<int> AddAsync(Usuario usuario);    
     }
 }

@@ -29,14 +29,14 @@ namespace GerenciadorLivro.Infrastructure.Persistence.Repositories
             return await _context.Usuarios.ToListAsync();
         }
 
-        public async Task<Usuario?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Usuario?> GetDetailsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var usuario = await _context.Usuarios
+                .Include(u => u.Emprestimos)
+                    .ThenInclude(e => e.Livro)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            return usuario;
         }
     }
 }

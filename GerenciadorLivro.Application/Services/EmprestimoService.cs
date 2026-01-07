@@ -12,7 +12,7 @@ namespace GerenciadorLivro.Application.Services
             _context = context;
         }
 
-        public ResultViewModel<List<EmprestimoItemViewModel>> GetAll(string search = "")
+        public async Task<ResultViewModel<List<EmprestimoItemViewModel>>> GetAll(string search = "")
         {
             var emprestimo = _context.Emprestimos.ToList();
 
@@ -21,7 +21,7 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<List<EmprestimoItemViewModel>>.Success(model);
         }
 
-        public ResultViewModel<EmprestimoViewModel> GetById(int id)
+        public async Task<ResultViewModel<EmprestimoViewModel>> GetById(int id)
         {
             var emprestimo = _context.Emprestimos
                 .Include(e => e.Livro)
@@ -35,7 +35,7 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<EmprestimoViewModel>.Success(model);
         }
 
-        public ResultViewModel<int> Insert(CreateEmprestimoInputModel model)
+        public async Task<ResultViewModel<int>> Insert(CreateEmprestimoInputModel model)
         {
             var livro = _context.Livros.SingleOrDefault(l => l.Id == model.IdLivro);
             if (livro is null)
@@ -54,7 +54,7 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<int>.Success(emprestimo.Id);
         }
 
-        public ResultViewModel Devolver(int id)
+        public async Task<ResultViewModel> Devolver(int id)
         {
             var emprestimo = _context.Emprestimos.SingleOrDefault(e => e.Id == id);
 
