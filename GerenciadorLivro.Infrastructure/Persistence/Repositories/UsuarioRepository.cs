@@ -29,6 +29,12 @@ namespace GerenciadorLivro.Infrastructure.Persistence.Repositories
             return await _context.Usuarios.ToListAsync();
         }
 
+        public async Task<Usuario?> GetByIdAsync(int id)
+        {
+            return await _context.Usuarios
+                .SingleOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<Usuario?> GetDetailsByIdAsync(int id)
         {
             var usuario = await _context.Usuarios

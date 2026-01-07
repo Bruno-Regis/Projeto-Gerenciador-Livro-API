@@ -1,7 +1,4 @@
 ﻿using GerenciadorLivro.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GerenciadorLivro.Core.Repositories
 {
@@ -11,7 +8,7 @@ namespace GerenciadorLivro.Core.Repositories
         Task<Emprestimo?> GetDetailsByIdAsync(int id);
         Task<Emprestimo?> GetByIdAsync(int id);
         Task<bool> Exists(int id);
-        Task<int> AddAsync(Emprestimo livro);
-        Task DeleteAsync(Emprestimo livro);
+        Task<int> AddAsync(Emprestimo emprestimo);
+        Task UpdateAsync(Emprestimo emprestimo);
     }
 }

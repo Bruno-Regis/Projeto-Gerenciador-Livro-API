@@ -19,7 +19,7 @@ namespace GerenciadorLivro.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string search = "")
         {
-            var result = _service.GetAll(search);
+            var result = await _service.GetAll(search);
             return Ok(result);
         }
 
@@ -27,7 +27,7 @@ namespace GerenciadorLivro.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetById(id);
             if(!result.IsSuccess)
             {
                 return BadRequest(result.Message);
@@ -41,7 +41,7 @@ namespace GerenciadorLivro.API.Controllers
         public async Task<IActionResult> Post(CreateEmprestimoInputModel model)
         {
             
-            var result = _service.Insert(model);
+            var result = await _service.Insert(model);
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
@@ -50,7 +50,7 @@ namespace GerenciadorLivro.API.Controllers
         [HttpPost("{id}/devolucao")]
         public async Task<IActionResult> RegistrarDevolucao(int id)
         {
-            var result = _service.Devolver(id);
+            var result = await _service.Devolver(id);
             
             if (!result.IsSuccess)
             {
