@@ -22,7 +22,7 @@ namespace GerenciadorLivro.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string search ="")
         {
-            var result = _service.GetAll(search);
+            var result = await _service.GetAll(search);
             return Ok(result);
         }
 

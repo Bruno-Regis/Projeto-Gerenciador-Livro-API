@@ -13,20 +13,20 @@ namespace GerenciadorLivro.Application.Services
             _context = context;
         }
 
-        public ResultViewModel<List<UsuarioItemViewModel>> GetAll(string search = "")
+        public async Task<ResultViewModel<List<UsuarioItemViewModel>>> GetAll(string search = "")
         {
-            var usuarios = _context.Usuarios.ToList();
+            var usuarios = await _context.Usuarios.ToListAsync();
 
             var model = usuarios.Select(u => UsuarioItemViewModel.FromEntity(u)).ToList();
             return ResultViewModel<List<UsuarioItemViewModel>>.Success(model);
         }
 
-        public ResultViewModel<UsuarioViewModel> GetById(int id)
+        public async Task<ResultViewModel<UsuarioViewModel>> GetById(int id)
         {
-            var usuario = _context.Usuarios
+            var usuario = await _context.Usuarios
                 .Include(u => u.Emprestimos)
                     .ThenInclude(e => e.Livro)
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (usuario is null)
                 return ResultViewModel<UsuarioViewModel>.Error("Usuário não encontrado");
@@ -35,12 +35,12 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<UsuarioViewModel>.Success(model);
         }
 
-        public ResultViewModel<int> Insert(CreateUsuarioInputModel model)
+        public async Task<ResultViewModel<int>> Insert(CreateUsuarioInputModel model)
         {
             var usuario = model.ToEntity();
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
-            
+            await _context.Usuarios.AddAsync(usuario);
+            await _context.SaveChangesAsync();
+
             return ResultViewModel<int>.Success(usuario.Id);
         }
     }

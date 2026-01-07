@@ -5,11 +5,11 @@ namespace GerenciadorLivro.Core.Repositories
 {
     public interface ILivroRepository
     {
-        Task<List<Livro>> GetAll(string search = "");
-        Task<Livro?> GetDetailsById(int id);
-        Task<Livro?> GetById(int id);
-        Task<bool> Exists(int id);
-        Task<int> Add(Livro livro);
-        Task Delete(Livro livro);
+        // COLOCAR SUFIXO ASYNC NOS MÉTODOS
+        Task<List<Livro>> GetAllAsync(string search = "");
+        Task<Livro?> GetDetailsByIdAsync(int id);
+        Task<Livro?> GetByIdAsync(int id);
+        Task<int> AddAsync(Livro livro);
+        Task DeleteAsync(Livro livro);
     }
 }

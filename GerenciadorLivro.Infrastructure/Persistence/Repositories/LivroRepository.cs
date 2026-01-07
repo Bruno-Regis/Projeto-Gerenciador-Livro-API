@@ -15,7 +15,7 @@ namespace GerenciadorLivro.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<int> Add(Livro livro)
+        public async Task<int> AddAsync(Livro livro)
         {
             await _context.Livros.AddAsync(livro);
             await _context.SaveChangesAsync();
@@ -23,33 +23,27 @@ namespace GerenciadorLivro.Infrastructure.Persistence.Repositories
             return livro.Id;
         }
 
-        public async Task<bool> Exists(int id)
-        {
-            return await _context.Livros.AnyAsync(l => l.Id == id);
+        public async Task<List<Livro>> GetAllAsync(string search = "")
+        {   
+            return await _context.Livros.ToListAsync();  
         }
 
-        public async Task<List<Livro>> GetAll(string search = "")
-        {
-            var livros = await _context.Livros.ToListAsync();
-
-            return livros;  
-        }
-
-        public async Task<Livro?> GetById(int id)
+        public async Task<Livro?> GetByIdAsync(int id)
         {
             return await _context.Livros
                 .SingleOrDefaultAsync(l => l.Id == id);
         }
 
-        public async Task<Livro?> GetDetailsById(int id)
+        public async Task<Livro?> GetDetailsByIdAsync(int id)
         {
             var livro = await _context.Livros
                 .Include(l => l.Emprestimos)
+                    .ThenInclude(u => u.Usuario)
                 .SingleOrDefaultAsync(l => l.Id == id);
             return livro;
         }
 
-        public async Task Delete(Livro livro)
+        public async Task DeleteAsync(Livro livro)
         {
             _context.Livros.Remove(livro);
             await _context.SaveChangesAsync();

@@ -17,7 +17,7 @@ namespace GerenciadorLivro.Application.Services
 
         public async Task<ResultViewModel<List<LivroItemViewModel>>> GetAll(string search = "")
         {
-            var livros = await _repository.GetAll(search);
+            var livros = await _repository.GetAllAsync(search);
 
             var model = livros.Select(l => LivroItemViewModel.FromEntity(l)).ToList();
             return ResultViewModel<List<LivroItemViewModel>>.Success(model);
@@ -25,7 +25,7 @@ namespace GerenciadorLivro.Application.Services
     
         public async Task<ResultViewModel<LivroViewModel>> GetById(int id)
         {
-            var livro = await _repository.GetById(id);
+            var livro = await _repository.GetByIdAsync(id);
 
             if (livro is null)
                 return ResultViewModel<LivroViewModel>.Error("Livro não encontrado");
@@ -38,18 +38,18 @@ namespace GerenciadorLivro.Application.Services
         public async Task<ResultViewModel<int>> Insert(CreateLivroInputModel model)
         {
             var livro = model.ToEntity();
-            await _repository.Add(livro);
+            await _repository.AddAsync(livro);
 
             return ResultViewModel<int>.Success(livro.Id);
         }
 
         public async Task<ResultViewModel> Delete(int id)
         {
-            var livro = await _repository.GetById(id);  
+            var livro = await _repository.GetByIdAsync(id);  
             if (livro is null)
                 return ResultViewModel.Error("Livro não encontrado");
       
-            await _repository.Delete(livro);
+            await _repository.DeleteAsync(livro);
 
             return ResultViewModel.Success();
         }
