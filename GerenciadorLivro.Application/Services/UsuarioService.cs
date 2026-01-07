@@ -1,4 +1,5 @@
 ﻿using GerenciadorLivro.Application.Models;
+using GerenciadorLivro.Core.Repositories;
 using GerenciadorLivro.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,27 +7,24 @@ namespace GerenciadorLivro.Application.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly LivrosDbContext _context;
+        private readonly IUsuarioRepository _repository;
 
-        public UsuarioService(LivrosDbContext context)
+        public UsuarioService(IUsuarioRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public ResultViewModel<List<UsuarioItemViewModel>> GetAll(string search = "")
+        public async Task<ResultViewModel<List<UsuarioItemViewModel>>> GetAll(string search = "")
         {
-            var usuarios = _context.Usuarios.ToList();
+            var usuarios = await _repository.GetAllAsync();
 
             var model = usuarios.Select(u => UsuarioItemViewModel.FromEntity(u)).ToList();
             return ResultViewModel<List<UsuarioItemViewModel>>.Success(model);
         }
 
-        public ResultViewModel<UsuarioViewModel> GetById(int id)
+        public async Task<ResultViewModel<UsuarioViewModel>> GetById(int id)
         {
-            var usuario = _context.Usuarios
-                .Include(u => u.Emprestimos)
-                    .ThenInclude(e => e.Livro)
-                .FirstOrDefault(u => u.Id == id);
+            var usuario = await _repository.GetDetailsByIdAsync(id);
 
             if (usuario is null)
                 return ResultViewModel<UsuarioViewModel>.Error("Usuário não encontrado");
@@ -35,12 +33,11 @@ namespace GerenciadorLivro.Application.Services
             return ResultViewModel<UsuarioViewModel>.Success(model);
         }
 
-        public ResultViewModel<int> Insert(CreateUsuarioInputModel model)
+        public async Task<ResultViewModel<int>> Insert(CreateUsuarioInputModel model)
         {
             var usuario = model.ToEntity();
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
-            
+            await _repository.AddAsync(usuario);
+
             return ResultViewModel<int>.Success(usuario.Id);
         }
     }

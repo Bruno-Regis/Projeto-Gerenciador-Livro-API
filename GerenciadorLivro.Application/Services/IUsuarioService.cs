@@ -7,8 +7,8 @@ namespace GerenciadorLivro.Application.Services
 {
     public interface IUsuarioService
     {
-        ResultViewModel<List<UsuarioItemViewModel>> GetAll(string search = "");
-        ResultViewModel<UsuarioViewModel> GetById(int id);
-        ResultViewModel<int> Insert(CreateUsuarioInputModel model);
+        Task<ResultViewModel<List<UsuarioItemViewModel>>> GetAll(string search = "");
+        Task<ResultViewModel<UsuarioViewModel>> GetById(int id);
+        Task<ResultViewModel<int>> Insert(CreateUsuarioInputModel model);
     }
 }

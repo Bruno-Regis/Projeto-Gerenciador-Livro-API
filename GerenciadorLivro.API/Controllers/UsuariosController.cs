@@ -19,18 +19,18 @@ namespace GerenciadorLivro.API.Controllers
 
         // GET api/usuarios?search=term
         [HttpGet]
-        public IActionResult Get(string search = "")
+        public async Task<IActionResult> Get(string search = "")
         {
-            var result = _service.GetAll(search);
+            var result = await _service.GetAll(search);
             return Ok(result);
         }
 
 
         // GET api/usuarios/1234
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _service.GetById(id);
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Message);
@@ -41,9 +41,9 @@ namespace GerenciadorLivro.API.Controllers
 
         // POST api/usuarios
         [HttpPost]   
-        public IActionResult Post(CreateUsuarioInputModel model)
+        public async Task<IActionResult> Post(CreateUsuarioInputModel model)
         {
-            var result = _service.Insert(model);
+            var result = await _service.Insert(model);
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
