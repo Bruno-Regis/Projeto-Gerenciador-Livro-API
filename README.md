@@ -67,16 +67,36 @@ public class ResultViewModel<T>
 Desacoplamento de dependências através de injeção via constructor e extension methods para organização.
 
 ### 📦 Estrutura de Entidades
-┌─────────────┐       ┌──────────────┐       ┌─────────┐
-│  Usuario    │       │  Emprestimo  │       │  Livro  │
-├─────────────┤       ├──────────────┤       ├─────────┤
-│ Id          │──────<│ UsuarioId    │       │ Id      │
-│ Nome        │       │ LivroId      │>──────│ Titulo  │
-│ Email       │       │ DataEmprest. │       │ Autor   │
-│ Telefone    │       │ DataDevoluc. │       │ ISBN    │
-└─────────────┘       │ Status       │       │ AnoPubl.│
-                      └──────────────┘       │ Dispon. │
-                                             └─────────┘
+```mermaid
+erDiagram
+    USUARIO ||--o{ EMPRESTIMO : realiza
+    LIVRO ||--o{ EMPRESTIMO : possui
+    
+    USUARIO {
+        int Id PK
+        string Nome
+        string Email
+        string Telefone
+    }
+    
+    EMPRESTIMO {
+        int Id PK
+        int UsuarioId FK
+        int LivroId FK
+        datetime DataEmprestimo
+        datetime DataDevolucao
+        string Status
+    }
+    
+    LIVRO {
+        int Id PK
+        string Titulo
+        string Autor
+        string ISBN
+        int AnoPublicacao
+        int Disponivel
+    }
+```
 
 ### 🚀 Como Executar
 
